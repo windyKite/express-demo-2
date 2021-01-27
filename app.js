@@ -27,6 +27,27 @@ app.use((request, response, next) => {
   next()
 })
 
+// app.use('/xxx', (request, response, next) => {
+//   response.send('这是使用 use 方法的 xxx 目录')
+//   next()
+// })
+
+// app.post('/xxx', (request, response, next) => {
+//   response.send('这是使用 post 方法的 xxx 目录')
+//   next()
+// })
+
+app.route('/xxx')
+  .all((request, response, next) => {
+    // 所有方法都会执行这个函数
+    console.log('访问/xxx 时, 会执行这个函数!')
+    next()
+  })
+  .get((request, response, next) => {
+    response.send('这是使用 route 方法的 xxx 目录')
+    next()
+  })
+
 app.listen(3001, () => {
   console.log('正在 listen 3001 端口!')
 })
