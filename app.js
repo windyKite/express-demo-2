@@ -1,3 +1,4 @@
+const { response } = require('express')
 const express = require('express')
 const app = express()
 const logger = require('./logger')
@@ -6,18 +7,23 @@ const logger = require('./logger')
 app.use(logger('dev'))
 
 app.use((request, response, next) => {
-  // response.send('hi') // 响应只能发送一次
-  response.write('hi') // 响应只能发送一次
+  if(request.path === '/' && request.method === 'get') {
+    response.send('根目录')
+  }
   next()
 })
 
 app.use((request, response, next) => {
-  response.write('hi')
+  if(request.path === '/aaa') {
+    response.send('这是 aaa 目录')
+  }
   next()
 })
 
 app.use((request, response, next) => {
-  response.end()
+  if(request.path === '/bbb') {
+    response.send('这是 bbb 目录')
+  }
   next()
 })
 
