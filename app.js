@@ -1,4 +1,4 @@
-const { response } = require('express')
+const { response, request } = require('express')
 const express = require('express')
 const app = express()
 const logger = require('./logger')
@@ -7,46 +7,46 @@ const logger = require('./logger')
 app.use(logger('dev'))
 
 app.use((request, response, next) => {
-  if(request.path === '/' && request.method === 'get') {
-    response.send('根目录')
-  }
+  console.log(1);
   next()
 })
 
 app.use((request, response, next) => {
-  if(request.path === '/aaa') {
-    response.send('这是 aaa 目录')
+  console.log(2);
+  if(true){
+    next('未登录')
+  } else {
+    next()
   }
-  next()
 })
 
 app.use((request, response, next) => {
-  if(request.path === '/bbb') {
-    response.send('这是 bbb 目录')
-  }
+  console.log(3);
   next()
 })
 
-// app.use('/xxx', (request, response, next) => {
-//   response.send('这是使用 use 方法的 xxx 目录')
-//   next()
+// exporess 默认错误处理
+// app.use((error, request, response, next) => {
+//   if (request.headersSent) {
+//     return next(error)
+//   }
+//   response.status(500)
+//   // response.render('error', { error: error }) // render 需要模板引擎
+//   response.send(error)
 // })
 
-// app.post('/xxx', (request, response, next) => {
-//   response.send('这是使用 post 方法的 xxx 目录')
-//   next()
-// })
-
-app.route('/xxx')
-  .all((request, response, next) => {
-    // 所有方法都会执行这个函数
-    console.log('访问/xxx 时, 会执行这个函数!')
-    next()
-  })
-  .get((request, response, next) => {
-    response.send('这是使用 route 方法的 xxx 目录')
-    next()
-  })
+// 自定义错误处理程序, 一般在最后定义
+app.use((error, request, response, next) => {
+  console.log(error)
+  next(error)
+})
+let count = 0
+app.use((error, request, response, next) => {
+  count += 1
+  console.log(`目前有${count}个错误`)
+  next()
+  response.send(error)
+})
 
 app.listen(3001, () => {
   console.log('正在 listen 3001 端口!')
