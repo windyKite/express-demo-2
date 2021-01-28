@@ -48,6 +48,8 @@ app.use((error, request, response, next) => {
   response.send(error)
 })
 
+// next('route') 跳过第二个回调处理函数
+
 app.listen(3001, () => {
   console.log('正在 listen 3001 端口!')
 })
